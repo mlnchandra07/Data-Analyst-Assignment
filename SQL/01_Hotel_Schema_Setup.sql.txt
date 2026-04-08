@@ -1,0 +1,39 @@
+-- Users Table
+CREATE TABLE users (
+    user_id VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(100),
+    phone_number VARCHAR(15),
+    mail_id VARCHAR(100),
+    billing_address TEXT
+);
+
+-- Bookings Table
+CREATE TABLE bookings (
+    booking_id VARCHAR(50) PRIMARY KEY,
+    booking_date DATETIME,
+    room_no VARCHAR(50),
+    user_id VARCHAR(50),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+-- Booking Commercials
+CREATE TABLE booking_commercials (
+    id VARCHAR(50),
+    booking_id VARCHAR(50),
+    bill_id VARCHAR(50),
+    bill_date DATETIME,
+    item_id VARCHAR(50),
+    item_quantity FLOAT
+);
+
+-- Items Table
+CREATE TABLE items (
+    item_id VARCHAR(50) PRIMARY KEY,
+    item_name VARCHAR(100),
+    item_rate INT
+);
+
+-- Sample Data
+INSERT INTO items VALUES
+('itm-1', 'Tawa Paratha', 18),
+('itm-2', 'Mix Veg', 89);
