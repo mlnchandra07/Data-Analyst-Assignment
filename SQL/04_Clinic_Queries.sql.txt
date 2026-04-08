@@ -1,0 +1,46 @@
+-- Q1 Revenue by channel
+SELECT sales_channel, SUM(amount)
+FROM clinic_sales
+GROUP BY sales_channel;
+
+-- Q2 Top 10 customers
+SELECT uid, SUM(amount) AS total
+FROM clinic_sales
+GROUP BY uid
+ORDER BY total DESC
+LIMIT 10;
+
+-- Q3 Monthly profit
+WITH rev AS (
+    SELECT MONTH(datetime) m, SUM(amount) revenue
+    FROM clinic_sales
+    GROUP BY m
+),
+exp AS (
+    SELECT MONTH(datetime) m, SUM(amount) expense
+    FROM expenses
+    GROUP BY m
+)
+SELECT r.m,
+       r.revenue,
+       e.expense,
+       (r.revenue - e.expense) profit
+FROM rev r
+LEFT JOIN exp e ON r.m = e.m;
+
+-- Q4 Most profitable clinic per city
+WITH profit AS (
+    SELECT c.city, cs.cid,
+           SUM(cs.amount) - COALESCE(SUM(e.amount),0) profit
+    FROM clinics c
+    JOIN clinic_sales cs ON c.cid = cs.cid
+    LEFT JOIN expenses e ON e.cid = cs.cid
+    GROUP BY c.city, cs.cid
+)
+SELECT *
+FROM (
+    SELECT *,
+           RANK() OVER (PARTITION BY city ORDER BY profit DESC) rnk
+    FROM profit
+) t
+WHERE rnk = 1;
