@@ -1,0 +1,8 @@
+def convert_minutes(minutes):
+    hours = minutes // 60
+    remaining = minutes % 60
+    return f"{hours} hrs {remaining} minutes"
+
+# Example
+print(convert_minutes(130))  # 2 hrs 10 minutes
+print(convert_minutes(110))  # 1 hr 50 minutes
